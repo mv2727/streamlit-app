@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: streamlit-app
-        image: streamlit-app:latest
+        image: vm27/streamlit-app:latest
         ports:
         - containerPort: 80
 
