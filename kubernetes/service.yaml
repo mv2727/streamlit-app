@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: streamlit-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: streamlit-app
   ports:
