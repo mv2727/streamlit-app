@@ -31,7 +31,7 @@ pipeline {
                         withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         // Use the credentials to log in to Docker
                         sh "echo '${DOCKER_PASS}' | docker login -u '${DOCKER_USER}' --password-stdin"
-                        sh 'docker push vm27/streamlitapp:latest'
+                        sh 'docker push vm27/streamlit-app:latest'
                         
                     }
                 }
