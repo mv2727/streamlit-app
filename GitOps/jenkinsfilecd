@@ -39,9 +39,9 @@ pipeline {
         stage("Update: Kubernetes manifests"){
             steps{
                 script{
-                    dir('kubernates'){
+                    dir('kubernetes'){
                         sh """
-                            sed -i -e s/streamlit-app.*/streamlit-app:${params.Application_DOCKER_TAG}/g deployment.yml
+                            sed -i -e s/streamlit-app.*/streamlit-app:${params.Application_DOCKER_TAG}/g deployment.yaml
                         """
                     }
                 }
