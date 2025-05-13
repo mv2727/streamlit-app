@@ -3,7 +3,7 @@ pipeline {
     agent any
     
     parameters {
-        string(name: 'Application_DOCKER_TAG', defaultValue: '', description: 'Streamfit Applications Docker tag of the image built by the CI job')
+        string(name: 'Application_DOCKER_TAG', defaultValue: '', description: 'Streamlit Applications Docker tag of the image built by the CI job')
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
         stage('Git: Code Checkout') {
             steps {
                 script{
-                    code_checkout("https://github.com/sandeshnavsare/streamlit_application.git","master")
+                    code_checkout("https://github.com/mv2727/streamlit-app.git","master")
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
                 script{
                     dir('kubernates'){
                         sh """
-                            sed -i -e s/streamlit-application.*/streamlit-application:${params.Application_DOCKER_TAG}/g deployment.yml
+                            sed -i -e s/streamlit-appl.*/streamlit-app:${params.Application_DOCKER_TAG}/g deployment.yml
                         """
                     }
                 }
@@ -59,57 +59,19 @@ pipeline {
                         git commit -m "Updated environment variables"
                         
                         echo "Pushing changes to github: "
-                        git push https://github.com/sandeshnavsare/streamlit_application.git master
+                        git push https://github.com/mv2727/streamlit-app.git master
                     '''
                     }
                 }
             }
         }
     }
-  post {
+      post {
         success {
-            script {
-                emailext attachLog: true,
-                from: 'sandeshnavsare1@gmail.com',
-                subject: "streamfit Application has been updated and deployed - '${currentBuild.result}'",
-                body: """
-                    <html>
-                    <body>
-                        <div style="background-color: #FFA07A; padding: 10px; margin-bottom: 10px;">
-                            <p style="color: black; font-weight: bold;">Project: ${env.JOB_NAME}</p>
-                        </div>
-                        <div style="background-color: #90EE90; padding: 10px; margin-bottom: 10px;">
-                            <p style="color: black; font-weight: bold;">Build Number: ${env.BUILD_NUMBER}</p>
-                        </div>
-                        <div style="background-color: #87CEEB; padding: 10px; margin-bottom: 10px;">
-                            <p style="color: black; font-weight: bold;">URL: ${env.BUILD_URL}</p>
-                        </div>
-                    </body>
-                    </html>
-            """,
-            to: 'sandeshnavsare@gmail.com',
-            mimeType: 'text/html'
+            echo 'Pipeline completed successfully!'
             }
-        }
-      failure {
-            script {
-                emailext attachLog: true,
-                from: 'sandeshnavsare1@gmail.com',
-                subject: "streamfit Application build failed - '${currentBuild.result}'",
-                body: """
-                    <html>
-                    <body>
-                        <div style="background-color: #FFA07A; padding: 10px; margin-bottom: 10px;">
-                            <p style="color: black; font-weight: bold;">Project: ${env.JOB_NAME}</p>
-                        </div>
-                        <div style="background-color: #90EE90; padding: 10px; margin-bottom: 10px;">
-                            <p style="color: black; font-weight: bold;">Build Number: ${env.BUILD_NUMBER}</p>
-                        </div>
-                    </body>
-                    </html>
-            """,
-            to: 'sandeshnavsare@gmail.com',
-            mimeType: 'text/html'
+        failure {
+            echo 'Pipeline failed.'
             }
         }
     }
