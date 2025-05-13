@@ -55,6 +55,7 @@ pipeline {
                         string(credentialsId: 'GIT_USER_EMAIL', variable: 'GIT_USER_EMAIL'),
                         string(credentialsId: 'GIT_USER_NAME', variable: 'GIT_USER_NAME'),
                         usernamePassword(credentialsId: 'GitHub', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')
+                    ])
                         sh '''
                         echo "Checking repository status: "
                         git status
