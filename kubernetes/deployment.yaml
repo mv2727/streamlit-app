@@ -11,27 +11,27 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: streamlit-app
+  name: streamlit-app:v1.5
   namespace: streamlit
   labels:
-    app.kubernetes.io/name: streamlit-app
+    app.kubernetes.io/name: streamlit-app:v1.5
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: streamlit-app
+      app.kubernetes.io/name: streamlit-app:v1.5
   replicas: 1
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: streamlit-app
+        app.kubernetes.io/name: streamlit-app:v1.5
     spec:
       nodeSelector:
         node-name: private
     spec:
       terminationGracePeriodSeconds: 0
       containers:
-        - name: streamlit-app
-          image: vm27/streamlit-app
+        - name: streamlit-app:v1.5
+          image: vm27/streamlit-app:v1.5
           imagePullPolicy: IfNotPresent
           command: ["streamlit", "run"]
           args:
@@ -54,14 +54,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: streamlit-app
+  name: streamlit-app:v1.5
   namespace: streamlit
   labels:
-    app.kubernetes.io/name: streamlit-app
+    app.kubernetes.io/name: streamlit-app:v1.5
 spec:
   type: ClusterIP
   selector:
-    app.kubernetes.io/name: streamlit-app
+    app.kubernetes.io/name: streamlit-app:v1.5
   ports:
     - port: 80
       targetPort: 8501
@@ -90,7 +90,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: streamlit-app
+                name: streamlit-app:v1.5
                 port:
                   number: 80
 ---
