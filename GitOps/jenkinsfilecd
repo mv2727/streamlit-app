@@ -41,7 +41,7 @@ pipeline {
                 script{
                     dir('kubernetes'){
                         sh """
-                            sed -i -e s/streamlit-app.*/streamlit-app:${params.Application_DOCKER_TAG}/g deployment.yaml
+                            sed -i -e s/streamlit-application.*/streamlit-application:${params.Application_DOCKER_TAG}/g deployment.yaml
                         """
                     }
                 }
