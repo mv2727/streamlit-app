@@ -72,7 +72,8 @@ pipeline {
                         git commit -m "Updated environment variables"
                         
                         echo "Pushing changes to github: "
-                        git push https://github.com/mv2727/streamlit-app.git master
+                        git push https://$(echo $GIT_USERNAME | sed 's/@/%40/g'):$GIT_PASSWORD@github.com/mv2727/streamlit-app.git master
+
                     '''
                     }
                 }
