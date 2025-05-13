@@ -3,7 +3,7 @@ pipeline {
     agent any
     
     environment {
-    Application_DOCKER_TAG = 'your_value_here'
+    Application_DOCKER_TAG = ''
     }
 
     parameters {
