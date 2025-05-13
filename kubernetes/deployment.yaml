@@ -1,22 +1,97 @@
+---
+
+# Namespace Configuration
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: streamlit
+---
+
+#Deployment Configuration
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: streamlit-app-deployment
+  name: streamlit-app
+  namespace: streamlit
   labels:
-    app: streamlit-app
+    app.kubernetes.io/name: streamlit-app
 spec:
-  replicas: 
   selector:
     matchLabels:
-      app: streamlit-app
+      app.kubernetes.io/name: streamlit-app
+  replicas: 1
   template:
     metadata:
       labels:
-        app: streamlit-app
+        app.kubernetes.io/name: streamlit-app
     spec:
+      nodeSelector:
+        node-name: private
+    spec:
+      terminationGracePeriodSeconds: 0
       containers:
-      - name: streamlit-app
-        image: vm27/streamlit-app:latest
-        ports:
-        - containerPort: 80
+        - name: streamlit-app
+          image: vm27/streamlit-app
+          imagePullPolicy: IfNotPresent
+          command: ["streamlit", "run"]
+          args:
+            - "app.py"
+            - "--server.port=8501"
+            - "--server.enableCORS=false"
+          ports:
+            - name: app-port
+              containerPort: 8501
+          resources:
+            requests:
+              cpu: 0.5
+              memory: 500Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+---
+
+#Service Configuration
+apiVersion: v1
+kind: Service
+metadata:
+  name: streamlit-app
+  namespace: streamlit
+  labels:
+    app.kubernetes.io/name: streamlit-app
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: streamlit-app
+  ports:
+    - port: 80
+      targetPort: 8501
+      protocol: TCP
+
+---
+#Ingress Configuration
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: streamlit-ingress
+  namespace: streamlit
+  annotations:
+    alb.ingress.kubernetes.io/group.name: "common-app-alb"
+    alb.ingress.kubernetes.io/group.order: "5"
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: streamlit-app
+                port:
+                  number: 80
+---
 
