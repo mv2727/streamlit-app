@@ -2,6 +2,10 @@
 pipeline {
     agent any
     
+    environment {
+    Application_DOCKER_TAG = 'your_value_here'
+    }
+
     parameters {
         string(name: 'Application_DOCKER_TAG', defaultValue: '', description: 'Streamlit Applications Docker tag of the image built by the CI job')
     }
@@ -26,7 +30,7 @@ pipeline {
         stage('Verify: Docker Image Tags') {
             steps {
                 script{
-                    echo "Application_DOCKER_TAG: ${Application_DOCKER_TAG}"
+                    echo "Application_DOCKER_TAG: ${params.Application_DOCKER_TAG}"
                 }
             }
         }
@@ -75,4 +79,3 @@ pipeline {
             }
         }
     }
-
