@@ -31,7 +31,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
         - name: streamlit-app
-          image: vm27/streamlit-app
+          image: vm27/streamlit-application
           imagePullPolicy: IfNotPresent
           command: ["streamlit", "run"]
           args:
